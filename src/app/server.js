@@ -32,4 +32,5 @@ if(enableHttps){
 
 }else{
     console.log("Https disabled");
-}
+} 
+return 0;

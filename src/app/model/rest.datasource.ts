@@ -18,7 +18,8 @@ export class RestDataSource{
         //this.baseUrl=`${PROTOCOL}://${location.hostname}:${PORT}/`;
        this.baseUrl="https://product-api-8c5q.onrender.com/api/";
       this.headers.set('Content-Type', 'application/json; charset=utf-8');
-      this.headers.set('Access-Control-Allow-Origin', '*');
+      this.headers.append('Access-Control-Allow-Origin', '*');
+      this.headers.append("Referrer-policy","no-referrer");
     }
 
     getProducts():Observable<Product[]>{
