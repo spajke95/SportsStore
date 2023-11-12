@@ -15,7 +15,7 @@ export class RestDataSource{
 
     constructor(private http:HttpClient){
         //this.baseUrl=`${PROTOCOL}://${location.hostname}:${PORT}/`;
-       this.baseUrl="/api/";
+       this.baseUrl="https://product-api-8c5q.onrender.com/api/";
     }
 
     getProducts():Observable<Product[]>{
