@@ -12,14 +12,15 @@ const PORT=3500;
 export class RestDataSource{
     baseUrl:string;
     auth_token?:string;
-    headers:HttpHeaders=new HttpHeaders();
+    headers:HttpHeaders;
 
     constructor(private http:HttpClient){
         //this.baseUrl=`${PROTOCOL}://${location.hostname}:${PORT}/`;
        this.baseUrl="https://product-api-8c5q.onrender.com/api/";
-      this.headers.set('Content-Type', 'application/json; charset=utf-8');
-      this.headers.append('Access-Control-Allow-Origin', '*');
-      this.headers.append("Referrer-policy","no-referrer");
+      this.headers=new HttpHeaders({
+        'Content-Type':'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+        "Referrer-policy":"no-referrer"});
     }
 
     getProducts():Observable<Product[]>{
