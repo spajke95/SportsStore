@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import {HttpClient}from "@angular/common/http";
+import {HttpClient, HttpParams, HttpParamsOptions}from "@angular/common/http";
 import { map,Observable } from "rxjs";
 import { Product } from "./product.model";
 import { Order } from "./order.model";
@@ -12,19 +12,26 @@ const PORT=3500;
 export class RestDataSource{
     baseUrl:string;
     auth_token?:string;
-    headers:HttpHeaders;
+    httpOptions;
 
     constructor(private http:HttpClient){
         //this.baseUrl=`${PROTOCOL}://${location.hostname}:${PORT}/`;
        this.baseUrl="https://product-api-8c5q.onrender.com/api/";
-      this.headers=new HttpHeaders({
-        'Content-Type':'application/json; charset=utf-8',
-        'Access-Control-Allow-Origin': '*',
-        "Referrer-policy":"no-referrer"});
+     
+         this.httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': "*",
+              'Referrer-policy': "no-referrer",
+            }),
+            params: new HttpParams().set('mode',"no-cors")
+          };
+        
     }
 
     getProducts():Observable<Product[]>{
-        return this.http.get<Product[]>(this.baseUrl+"products",{headers:this.headers});
+        return this.http.get<Product[]>(
+            this.baseUrl+"products",this.httpOptions);
     }
 
     saveOrder(order:Order):Observable<Order>{
