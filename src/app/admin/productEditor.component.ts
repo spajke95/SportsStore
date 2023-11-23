@@ -22,6 +22,7 @@ export class ProductEditorComponent{
 
     save(){
         this.repository.saveProduct(this.product);
-        this.router.navigateByUrl("/admin/main/products")
+        this.router.navigateByUrl("/admin/main/products");
+        console.log("in product repository save method");
     }
 }

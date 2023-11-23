@@ -1,10 +1,12 @@
 import {Injectable}from "@angular/core";
 import { Product } from "./product.model";
-import { Observable,from } from "rxjs";
+import { Observable,from ,of} from "rxjs";
 import { Order } from "./order.model";
 
 @Injectable()//this decorator is used to tell that class is service
 export class StaticDataSource{
+    auth_token?:string;
+    private locator=(p:Product,id:number|any)=>p.id==id;
     private products:Product[]=[
         new Product(1,"Product 1","category 1","Product 1 (category 1)",100),
         new Product(2,"Product 2","category 1","Product 2 (category 1)",100),
@@ -19,11 +21,69 @@ export class StaticDataSource{
         new Product(11,"Product 11","category 3","Prodcut 11 (category 3)",100),
         new Product(12,"Product 12","category 3","Product 12 (category 3)",100)
     ];
+    private orders:Order []=[];
     getProducts():Observable<Product[]>{
         return from([this.products]);
     }
+
+    getProduct(id:number):Product|undefined{
+        return this.products.find(p=>this.locator(p,id))
+    }
+
+    authenticate(username:string,password:string):Observable<boolean>{
+        this.auth_token=String(Math.random());
+        return of(username=="admin"&&password=="secret");
+    }
+
     saveOrder(order:Order){
-        console.log(JSON.stringify(order));
-        return from([order]);
+       this.orders.push(order);
+        return from(this.orders);
+    }
+    getOrders():Observable<Order[]>{
+        return from([this.orders]);
+    }
+
+    deleteOrder(id:number):Observable<Order>{
+        let index=this.orders.findIndex(o=>o.id==id);
+        this.orders.splice(index,1);
+        return from(this.orders);
+    }
+
+    updateOrder(order:Order):Observable<Order>{
+        let index=this.orders.findIndex(o=>o.id==order.id);
+        this.orders.splice(index,1,order);
+        return from(this.orders);
+    }
+
+    saveProduct(product:Product):Observable<Product>{
+        if(product.id==0||product.id==null){
+            console.log("in static data source  saveProduct method");
+            product.id=this.generateID();
+             this.products.push(product);
+             console.log("product name :"+product.name+" length " +this.products.length);
+        }else{
+            let index=this.products.findIndex(p=>this.locator(p,product.id));
+            console.log("Index : "+index);
+            this.products.splice(index,1,product);
+        }
+        return from(this.products);       
+    }
+
+    deleteProduct(id:number){
+        let index=this.products.findIndex(p=>this.locator(p,id));
+        if(index >-1){
+            console.log("index "+index);
+            this.products.splice(index,1);
+        }
+        return from([this.products])
+    }
+    
+    private generateID():number{
+        let candidate=100;
+        while(this.getProduct(candidate)!=null){
+            candidate++;
+            console.log("in while loop"+ candidate);
+        }
+        return candidate;
     }
 }

@@ -12,6 +12,7 @@ import { ConnectionService } from "./connection.service";
 @NgModule({//decorator  that tells which classes should be used as services for the dependency injection feature,
     imports:[HttpClientModule]
     ,providers:[ProductRepository,StaticDataSource,Cart,Order,OrderRepository,
-    {provide:StaticDataSource,useClass:RestDataSource},RestDataSource,AuthService,ConnectionService]
+    //{provide:StaticDataSource,useClass:RestDataSource},
+    RestDataSource,AuthService,ConnectionService]
 })
 export class ModelModule{}
